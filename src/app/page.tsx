@@ -1,4 +1,4 @@
-import PostDescription from "./components/post";
+import PostDescription from "./components/post-description";
 
 export default async function Home() {
   return (
