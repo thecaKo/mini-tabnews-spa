@@ -1,4 +1,57 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation"; // Importing from next/navigation
+
 export default function Register() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const validateForm = () => {
+    if (!email.includes("@")) {
+      setError("O e-mail deve conter '@'");
+      return false;
+    }
+    if (password.length < 6) {
+      setError("A senha deve ter pelo menos 6 caracteres");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
+  async function handleRegister(e: any) {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    const user = {
+      name: username,
+      email: email,
+      password: password,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3333/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (response.ok) {
+        router.push("/");
+      } else {
+        setError("Erro ao registrar. Tente novamente mais tarde.");
+      }
+    } catch (err) {
+      setError("Erro ao conectar com o servidor. Tente novamente.");
+    }
+  }
+
   return (
     <div className="flex justify-center">
       <div className="flex flex-col items-center justify-center py-20 p-6 w-full max-w-3xl">
@@ -6,13 +59,14 @@ export default function Register() {
           <div className="flex justify-start w-full max-w-2xl ml-5">
             <h1 className="text-3xl font-bold text-gray-900">Cadastro</h1>
           </div>
-          <form className="w-full bg-white p-8 rounded-lg py-2">
+          <form onSubmit={handleRegister} className="w-full bg-white p-8 rounded-lg py-2">
             <label htmlFor="username" className="block font-semibold text-xl font-medium text-gray-800 ml-1">
               Nome de usuário
             </label>
             <input
               id="username"
               type="text"
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="Escolha um nome de usuário"
               className="w-full p-2 px-5 h-10 bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 mb-6"
               required
@@ -24,6 +78,7 @@ export default function Register() {
             <input
               id="email"
               type="email"
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Digite seu e-mail"
               className="w-full p-2 px-5 h-10 bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 mb-6"
               required
@@ -35,10 +90,13 @@ export default function Register() {
             <input
               id="password"
               type="password"
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Crie uma senha"
               className="w-full p-2 px-5 h-10 bg-gray-100 border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 mb-6"
               required
             />
+
+            {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
             <div className="flex justify-end space-x-6 mt-6">
               <button
