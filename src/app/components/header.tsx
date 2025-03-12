@@ -1,10 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { SunIcon, MoonIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [darkMode, setDarkMode] = useState(false);
+  const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const router = useRouter();
+  const dropdownRef = useRef(null); // Referência para o menu dropdown
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -12,6 +17,50 @@ export default function Header() {
       document.documentElement.classList.remove("dark");
     } else {
       document.documentElement.classList.add("dark");
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch("http://localhost:3333/me", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await response.json();
+        setUser(data.user);
+      } catch (error) {
+        console.error("Erro ao buscar perfil:", error);
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:3333/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      setUser(null);
+      router.push("/login");
+    } catch (error) {
+      console.error("Erro ao deslogar:", error);
     }
   };
 
@@ -28,6 +77,7 @@ export default function Header() {
           <button onClick={toggleDarkMode} className="text-gray-300 hover:text-yellow-400 p-2">
             {darkMode ? <SunIcon className="w-6 h-6" /> : <MoonIcon className="w-6 h-6" />}
           </button>
+
           <div className="relative flex items-center">
             <input
               type="text"
@@ -36,19 +86,40 @@ export default function Header() {
               placeholder="Buscar..."
               className="bg-gray-700 text-white text-sm px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition hover:bg-gray-600"
             />
-            <button className="ml-2 px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400" hidden>
-              Buscar
-            </button>
           </div>
 
-          <>
-            <a href="/cadastro" className="px-4 py-2 text-sm font-bold bg-gray-700 text-white rounded-md hover:bg-gray-600">
-              Cadastrar
-            </a>
-            <a href="/login" className="px-4 py-2 text-sm font-bold bg-gray-700 text-white rounded-md hover:bg-gray-600">
-              Login
-            </a>
-          </>
+          {user ? (
+            <div className="relative flex items-center" ref={dropdownRef}>
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center aspace-x-2 px-4 py-2 text-sm font-bold bg-gray-700 text-white rounded-md hover:bg-gray-600"
+              >
+                <span>{user.name}</span>
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute left-20 mt-18 w-48 bg-gray-700 text-white rounded-md shadow-lg">
+                  <a href="/posts/publicar" className="block px-4 py-2 text-sm hover:bg-gray-600">
+                    Publicar Conteúdo
+                  </a>
+                  <a href={`/users/${user.name}`} className="block px-4 py-2 text-sm hover:bg-gray-600">
+                    Perfil
+                  </a>
+                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-600">
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <a href="/cadastro" className="px-4 py-2 text-sm font-bold bg-gray-700 text-white rounded-md hover:bg-gray-600">
+                Cadastrar
+              </a>
+              <a href="/login" className="px-4 py-2 text-sm font-bold bg-gray-700 text-white rounded-md hover:bg-gray-600">
+                Login
+              </a>
+            </>
+          )}
         </div>
       </div>
     </header>

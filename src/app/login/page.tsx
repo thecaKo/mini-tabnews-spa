@@ -42,6 +42,7 @@ export default function Login() {
       });
 
       if (response.ok) {
+        window.location.reload(); // Corrigido para chamar a função corretamente
         router.push("/");
       } else {
         setError("Credenciais inválidas. Tente novamente.");
