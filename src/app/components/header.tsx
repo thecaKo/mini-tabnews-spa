@@ -9,7 +9,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
-  const dropdownRef = useRef(null); // Referência para o menu dropdown
+  const dropdownRef = useRef(null);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -63,7 +63,12 @@ export default function Header() {
       console.error("Erro ao deslogar:", error);
     }
   };
-
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    if (searchQuery) {
+      window.location.href = `/users/${searchQuery}`;
+    }
+  };
   return (
     <header className="bg-gray-800 text-white dark:bg-gray-900 py-3">
       <div className="max-w-screen-xl mx-auto px-6 flex justify-between items-center">
@@ -79,13 +84,15 @@ export default function Header() {
           </button>
 
           <div className="relative flex items-center">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar..."
-              className="bg-gray-700 text-white text-sm px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition hover:bg-gray-600"
-            />
+            <form onSubmit={handleSearch}>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar..."
+                className="bg-gray-700 text-white text-sm px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition hover:bg-gray-600"
+              />
+            </form>
           </div>
 
           {user ? (
