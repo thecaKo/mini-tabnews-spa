@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
 
 export default function Profile() {
   const [userData, setUserData] = useState<any>(null);

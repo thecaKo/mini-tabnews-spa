@@ -21,7 +21,7 @@ export default function PostDescription({ title, author, timeAgo, commentsLength
                   {title}
                 </Link>
                 <p className="text-gray-500 text-sm mt-1">
-                  12 upvotes · {commentsLength} comentários · {author} · {timeAgo}
+                  · {commentsLength} comentários · {author} · {timeAgo}
                 </p>
               </div>
             </div>

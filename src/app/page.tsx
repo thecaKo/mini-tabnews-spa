@@ -29,25 +29,22 @@ export default function Home() {
     return <div>{error}</div>;
   }
 
-  console.log(posts);
-
   return (
     <div className="min-h-screen bg-white">
       {posts.length > 0 ? (
         posts.map((post, index) => (
           <PostDescription
-            key={post.id} // Usando o id como chave única
-            title={post.title} // Título do post
-            index={(index + 1).toString()} // Usando o índice do array mais 1
-            author={post.user?.name || "Autor desconhecido"} // Usando o nome do autor ou valor padrão
-            commentsLength={(post.Comment?.length || 0).toString()} // Protegendo contra valores indefinidos
+            key={post.id}
+            title={post.title}
+            index={(index + 1).toString()}
+            author={post.user?.name || "Autor desconhecido"}
+            commentsLength={(post.Comment?.length || 0).toString()}
             timeAgo={new Date(post.created_at).toLocaleString("pt-BR", {
               day: "numeric",
               month: "long",
               year: "numeric",
               hour: "numeric",
               minute: "numeric",
-              second: "numeric",
             })}
           />
         ))
