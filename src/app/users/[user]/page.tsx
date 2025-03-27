@@ -38,7 +38,7 @@ export default function Profile() {
     return <div className="text-center text-black font-bold">Loading...</div>;
   }
 
-  const { name, email, coins, created_at, role, Post, Comment } = userData.user.user;
+  const { name, email, coins, created_at, role, Post, Comment } = userData.user;
 
   return (
     <div className="min-h-screen font-bold text-black py-8 px-6">

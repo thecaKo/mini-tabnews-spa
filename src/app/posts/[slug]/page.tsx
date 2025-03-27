@@ -54,6 +54,7 @@ export default function PostsPage() {
           hour: "numeric",
           minute: "numeric",
         })}
+        postId={id}
       />
     </div>
   );

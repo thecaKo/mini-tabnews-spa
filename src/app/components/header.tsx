@@ -29,7 +29,7 @@ export default function Header() {
         });
 
         const data = await response.json();
-        setUser(data.user);
+        setUser(data);
       } catch (error) {
         console.error("Erro ao buscar perfil:", error);
       }
@@ -58,7 +58,7 @@ export default function Header() {
         credentials: "include",
       });
       setUser(null);
-      router.push("/login");
+      router.replace("/login");
     } catch (error) {
       console.error("Erro ao deslogar:", error);
     }
@@ -95,7 +95,7 @@ export default function Header() {
             </form>
           </div>
 
-          {user ? (
+          {user && user.name ? (
             <div className="relative flex items-center" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
