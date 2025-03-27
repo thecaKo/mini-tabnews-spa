@@ -49,7 +49,7 @@ export default function Home() {
           />
         ))
       ) : (
-        <div>No posts available</div>
+        <div className="flex justify-center p-20">Nenhum post no momento!</div>
       )}
     </div>
   );

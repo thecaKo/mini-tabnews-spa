@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function Profile() {
   const [userData, setUserData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("profile");
   const [error, setError] = useState<string | null>(null);
 
+  const router = useRouter();
   const { user } = useParams();
 
   useEffect(() => {
@@ -87,8 +88,14 @@ export default function Profile() {
                 <p className="text-gray-600 font-bold italic">Este usuário não publicou nenhum conteúdo.</p>
               ) : (
                 Post.map((post: any, index: number) => (
-                  <div key={index} className=" p-4 rounded-lg border-2 border:black">
-                    <p className="text-black font-bold">{post.title}</p>
+                  <div
+                    key={index}
+                    className=" p-4 rounded-lg border-2 border:black cursor-pointer"
+                    onClick={() => {
+                      router.push(`/posts/${post.slug}`);
+                    }}
+                  >
+                    <a className="text-black font-bold">{post.title}</a>
                     <p className="text-gray-600 font-bold italic"> {post.content}</p>
                   </div>
                 ))
@@ -107,7 +114,7 @@ export default function Profile() {
                 Comment.map((comment: any, index: number) => {
                   return (
                     <div key={index} className=" p-4 rounded-lg border-2 border:black">
-                      <p className="text-gray-600 font-bold italic">{comment.content}</p>
+                      <p className="text-gray-600 font-bold italic break-words">{comment.content}</p>
                     </div>
                   );
                 })
