@@ -13,7 +13,8 @@ interface Comment {
   id: string;
   content: string;
   created_at: string;
-  author: {
+  owner_id: string;
+  user: {
     name: string;
   };
 }
@@ -44,10 +45,6 @@ export default function PostsPageComponent({ postId, content, title, upvotes, au
         method: "GET",
         credentials: "include",
       });
-
-      if (!response.ok) {
-        throw new Error("Erro ao buscar os dados do usuário");
-      }
 
       const data = await response.json();
       setOwnerId(data.id);
@@ -132,7 +129,7 @@ export default function PostsPageComponent({ postId, content, title, upvotes, au
                 comments.map((comment) => (
                   <div key={comment.id} className="bg-white p-4 rounded-md border-1">
                     <div className="flex items-center text-sm text-gray-500 mb-2">
-                      <div className="bg-blue-200 text-blue-800 py-1 px-3 rounded-full text-sm font-semibold">{comment.id}</div>
+                      <div className="bg-blue-200 text-blue-800 py-1 px-3 rounded-full text-sm font-semibold">{comment.user.name}</div>
                       <span className="px-4">
                         {new Date(comment.created_at).toLocaleString("pt-BR", {
                           day: "numeric",

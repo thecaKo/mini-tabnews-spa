@@ -104,13 +104,14 @@ export default function Header() {
                 <span>{user.name}</span>
               </button>
               {isDropdownOpen && (
-                <div className="absolute left-20 mt-18 w-48 bg-gray-700 text-white rounded-md shadow-lg">
+                <div className="absolute left-20 mt-27 w-48 bg-gray-700 text-white rounded-md shadow-lg">
                   <a href="/posts/publicar" className="block px-4 py-2 text-sm hover:bg-gray-600">
                     Publicar Conteúdo
                   </a>
                   <a href={`/users/${user.name}`} className="block px-4 py-2 text-sm hover:bg-gray-600">
                     Perfil
                   </a>
+                  <a className="block px-4 py-2 text-sm hover:bg-gray-600">Moedas: {user.coins}</a>
                   <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-600">
                     Logout
                   </button>

@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [source, setSource] = useState("");
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -24,8 +26,7 @@ export default function CreatePost() {
       if (!response.ok) {
         throw new Error("Erro ao criar o post");
       }
-
-      const data = await response.json();
+      router.push("/");
     } catch (error) {}
   };
 
